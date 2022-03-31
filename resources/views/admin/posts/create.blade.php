@@ -37,6 +37,15 @@
                 @endforeach
             </select>
         </div>
+        <div class="col-12 d-flex">
+            @foreach ($tags as $tag)
+                <div class="form-group m-2">
+                    <input type="checkbox" id="{{ $tag->id }}" value="{{ $tag->id }}" name="tags[]"
+                        @if (in_array($tag->id, old('tags', $posts_tags_id ?? []))) checked @endif>
+                    <label for="tag-{{ $tag->id }}">{{ $tag->label }}</label>
+                </div>
+            @endforeach
+        </div>
         <button type=" submit" class="btn btn-success">Conferma</button>
     </form>
 @endsection

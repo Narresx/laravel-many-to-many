@@ -35,6 +35,8 @@ class PostController extends Controller
         $post = new Post();
         $categories = Category::all();
         $tags = Tag::all();
+        if (array_key_exists('tags', $data)) $post->tags()->attach($data['tags']);
+        else $post->tags()->detach();
         return view('admin.posts.create', compact('post','categories','tags'));
     }
 
@@ -77,11 +79,13 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit(Post $post, Request $request)
     {
-
+        $data = $request->all();
         $categories = Category::all();
         $tags = Tag::all();
+        if (array_key_exists('tags', $data)) $post->tags()->attach($data['tags']);
+        else $post->tags()->detach();
         return view('admin.posts.edit', compact('post', 'categories','tags'));
         
     }
@@ -105,6 +109,8 @@ class PostController extends Controller
             $data = $request->all();
             $data['slug'] = Str::slug($request->title,'-');
             $post->update($data);
+            if (array_key_exists('tags', $data)) $post->tags()->sync($data['tags']);
+            else $post->tags()->detach();
             return redirect()->route('admin.posts.show', $post);
 
     }

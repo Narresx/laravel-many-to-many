@@ -24,6 +24,7 @@
                                     @csrf
                                     <button type="submit" class="btn btn-danger">Elimina</button>
                                 </form>
+                                <span class="badge badge-primary">{{ $tag->label ?? '-' }}</span>
                             </div>
                         </div>
                     </div>
