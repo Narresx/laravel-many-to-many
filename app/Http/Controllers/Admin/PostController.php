@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Tag;
+
 
 
 
@@ -32,7 +34,8 @@ class PostController extends Controller
     {
         $post = new Post();
         $categories = Category::all();
-        return view('admin.posts.create', compact('post','categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create', compact('post','categories','tags'));
     }
 
     /**
@@ -78,7 +81,8 @@ class PostController extends Controller
     {
 
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit', compact('post', 'categories','tags'));
         
     }
 

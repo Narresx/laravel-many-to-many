@@ -14,12 +14,12 @@ class TagSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        $tag_categories = ['Frontend', 'Backend', 'Fullstack', 'UI/UX', 'Design','CMS'];
+        $tag_names = ['Frontend', 'Backend', 'Fullstack', 'UI/UX', 'Design','CMS'];
 
-        foreach ($tag_categories as $tag_category) {
+        foreach ($tag_names as $name) {
             $tag = new Tag();
 
-            $tag->label = $tag_category;
+            $tag->label = $name;
             $tag->color = $faker->hexColor();
 
             $tag->save();
