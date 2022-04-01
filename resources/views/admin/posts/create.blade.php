@@ -9,7 +9,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('admin.posts.store') }}" method="POST">
+    <form action="{{ route('admin.posts.store') }}" enctype="multipart/form-data" method="POST">
         @csrf
         <div class="form-group">
             <label for="title">Titolo</label>
@@ -24,7 +24,7 @@
         </div>
         <div class="form-group">
             <label for="image">Immagine</label>
-            <input type="text" class="form-control" id="image" name="image" placeholder="Inserisci qui l'immagine"
+            <input type="file" class="form-control-file" id="image" name="image" placeholder="Inserisci qui l'immagine"
                 value="{{ old('image') }}">
         </div>
         <div class="form-group">

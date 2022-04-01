@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Post;
 use App\Models\Category;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -52,12 +53,16 @@ class PostController extends Controller
         $request->validate([
         'title' =>'required|string|min:2|max:75',
         'content' =>'string',
-        'image' =>'url',
+        'image' =>'nullable|image',
         'category_id'=>'nullable|exists:categories,id'
         ]);
 
         $data = $request->all();
         $post = new Post();
+        if(array_key_exists('image', $data)){
+            $img_url = Storage::put('post_images',$data['image']);
+            $data['image'] = $img_url;
+        }
         $post->fill($data);
         $post->slug= Str::slug($post->title, '-');
         $post->save();
@@ -113,6 +118,14 @@ class PostController extends Controller
             $data = $request->all();
             $data['slug'] = Str::slug($request->title,'-');
             $post->update($data);
+            if(array_key_exists('image', $data)){
+                if($post->image){
+                    Storage::delete($post->image);
+                } 
+                $img_url = Storage::put('post_images',$data['image']);
+
+                $data['image'] = $img_url;
+            }
             if (array_key_exists('tags', $data)) $post->tags()->sync($data['tags']);
             return redirect()->route('admin.posts.show', $post);
 

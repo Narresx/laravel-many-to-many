@@ -9,7 +9,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('admin.posts.update', $post->id) }}" method="POST">
+    <form action="{{ route('admin.posts.update', $post->id) }}" enctype="multipart/form-data" method="POST">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -24,8 +24,8 @@
             </textarea>
         </div>
         <div class="form-group">
-            <label for="image">Contenuto</label>
-            <input type="text" class="form-control" id="image" name="image" placeholder="Inserisci qui l'immagine"
+            <label for="image">Immagine</label>
+            <input type="file" class="form-control-file" id="image" name="image" placeholder="Inserisci qui l'immagine"
                 value="{{ old('image', $post->image) }}">
         </div>
         <div class="form-group">
