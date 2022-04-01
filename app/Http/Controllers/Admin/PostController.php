@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\Auth;    
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -9,6 +10,8 @@ use App\Models\Post;
 use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PubliscedPostMail;
 
 
 
@@ -19,7 +22,7 @@ class PostController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     */
+     */                         
     public function index()
     {
         $posts = Post::all();
@@ -59,6 +62,7 @@ class PostController extends Controller
 
         $data = $request->all();
         $post = new Post();
+        $user =Auth::user();
         if(array_key_exists('image', $data)){
             $img_url = Storage::put('post_images',$data['image']);
             $data['image'] = $img_url;
@@ -66,7 +70,12 @@ class PostController extends Controller
         $post->fill($data);
         $post->slug= Str::slug($post->title, '-');
         $post->save();
+       
         if (array_key_exists('tags', $data)) $post->tags()->attach($data['tags']);
+
+        $mail = new PubliscedPostMail();
+        
+        Mail::to($user->mail)->send($mail);
 
         return redirect()->route('admin.posts.index');
 
