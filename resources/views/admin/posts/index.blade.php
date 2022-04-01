@@ -15,6 +15,10 @@
                             <p class="badge badge-pill badge-{{ $post->category->color }}">
                                 {{ $post->category->label }}
                             </p>
+                            @forelse ($post->tags as $tag)
+                                <p class="badge badge-primary">{{ $tag->label }}</p>
+                            @empty <span class="badge badge-pill badge-secondary">Nessuna Tag</span>
+                            @endforelse
                             <div class="d-flex justify-content-between">
                                 <a href="{{ route('admin.posts.show', $post->id) }}" class="btn btn-primary">Dettagli</a>
                                 <a href="{{ route('admin.posts.edit', $post->id) }}" class="btn btn-warning">Modifica</a>
@@ -24,7 +28,6 @@
                                     @csrf
                                     <button type="submit" class="btn btn-danger">Elimina</button>
                                 </form>
-                                <span class="badge badge-primary">{{ $tag->label ?? '-' }}</span>
                             </div>
                         </div>
                     </div>

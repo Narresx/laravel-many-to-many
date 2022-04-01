@@ -32,12 +32,12 @@ class PostController extends Controller
      */
     public function create()
     {
+
         $post = new Post();
         $categories = Category::all();
         $tags = Tag::all();
-        if (array_key_exists('tags', $data)) $post->tags()->attach($data['tags']);
-        else $post->tags()->detach();
-        return view('admin.posts.create', compact('post','categories','tags'));
+        $posts_tags_id = $post->tags->pluck('id')->toArray();
+        return view('admin.posts.create', compact('post','categories','tags','posts_tags_id'));
     }
 
     /**
@@ -58,8 +58,13 @@ class PostController extends Controller
 
         $data = $request->all();
         $post = new Post();
-        $data['slug']= St::slug($request->title, '-');
         $post->fill($data);
+        $post->slug= Str::slug($post->title, '-');
+        $post->save();
+        if (array_key_exists('tags', $data)) $post->tags()->attach($data['tags']);
+
+        return redirect()->route('admin.posts.index');
+
     }
 
     /**
@@ -79,14 +84,13 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post, Request $request)
+    public function edit(Post $post)
     {
-        $data = $request->all();
+
         $categories = Category::all();
         $tags = Tag::all();
-        if (array_key_exists('tags', $data)) $post->tags()->attach($data['tags']);
-        else $post->tags()->detach();
-        return view('admin.posts.edit', compact('post', 'categories','tags'));
+        $posts_tags_id = $post->tags->pluck('id')->toArray();
+        return view('admin.posts.edit', compact('post', 'categories','tags','posts_tags_id'));
         
     }
 
@@ -110,7 +114,6 @@ class PostController extends Controller
             $data['slug'] = Str::slug($request->title,'-');
             $post->update($data);
             if (array_key_exists('tags', $data)) $post->tags()->sync($data['tags']);
-            else $post->tags()->detach();
             return redirect()->route('admin.posts.show', $post);
 
     }
